@@ -6,11 +6,12 @@ def log_queries():
     def decorator(func):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
-            query = kwargs.get('query') or (args[0] if args else None)
+            # Try to get the query from either args or kwargs
+            query = kwargs.get('query') if 'query' in kwargs else (args[0] if args else None)
             if query:
-                print(f"[LOG] Executing SQL query: {query}")
+                print(f"SQL Query: {query}")
             else:
-                print("[LOG] No SQL query found in arguments.")
+                print("No SQL query provided.")
             return func(*args, **kwargs)
         return wrapper
     return decorator
