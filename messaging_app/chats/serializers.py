@@ -4,19 +4,28 @@ from .models import User, Conversation, Message
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'username', 'email']
+        fields = ['user_id', 'username', 'email', 'first_name', 'last_name', 'phone_number']
 
 class MessageSerializer(serializers.ModelSerializer):
-    sender = UserSerializer(read_only=True)
+    message_body = serializers.CharField()  # explicitly declare CharField
 
     class Meta:
         model = Message
-        fields = ['id', 'sender', 'conversation', 'text', 'timestamp']
+        fields = ['message_id', 'conversation', 'sender', 'message_body', 'sent_at', 'created_at']
 
 class ConversationSerializer(serializers.ModelSerializer):
-    participants = UserSerializer(many=True, read_only=True)
-    messages = MessageSerializer(many=True, read_only=True)
+    messages = serializers.SerializerMethodField()  # nested messages field
 
     class Meta:
         model = Conversation
-        fields = ['id', 'participants', 'messages', 'created_at']
+        fields = ['conversation_id', 'participants', 'messages']
+
+    def get_messages(self, obj):
+        messages = obj.messages.all()
+        return MessageSerializer(messages, many=True).data
+
+    def validate(self, data):
+        # Example validation raising ValidationError
+        if not data.get('participants'):
+            raise serializers.ValidationError("At least one participant required")
+        return data
