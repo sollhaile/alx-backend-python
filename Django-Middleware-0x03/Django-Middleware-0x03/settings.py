@@ -57,6 +57,7 @@ MIDDLEWARE = [
     'chats.middleware.RequestLoggingMiddleware',
     'chats.middleware.ResponseTimingMiddleware',
     'chats.middleware.ResponseTimingMiddleware',
+    'chats.middleware.RestrictAccessByTimeMiddleware',
 
     'chats.middleware.UserActivityMiddleware',
     'chats.middleware.CustomHeaderMiddleware',
