@@ -6,7 +6,6 @@ class RequestLoggingMiddleware:
 
     def __call__(self, request):
         log_line = f"{datetime.datetime.now()} - {request.method} {request.path}\n"
-        with open("C:/Users/Y.S/Documents/alx-backend-python/Django-Middleware-0x03/requests.log", "a") as log_file:
-            log_file.write(log_line)
-        response = self.get_response(request)
-        return response
+        log_path = "C:/Users/Y.S/Documents/alx-backend-python/Django-Middleware-0x03/requests.log"
+        with open(log_path, "a") as f:
+            f.write(log_line)
