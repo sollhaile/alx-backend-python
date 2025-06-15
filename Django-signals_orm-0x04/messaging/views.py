@@ -7,3 +7,16 @@ def delete_user(request):
     user = request.user
     user.delete()
     return JsonResponse({'message': 'User account deleted successfully'})
+from django.shortcuts import render
+from .models import Message
+from django.contrib.auth.decorators import login_required
+
+@login_required
+def message_thread_view(request):
+    messages = Message.objects.filter(parent_message__isnull=True).select_related('sender', 'receiver').prefetch_related('replies')
+    return render(request, 'messaging/thread.html', {'messages': messages})
+messages = Message.objects.filter(
+    sender=request.user,
+    receiver=some_receiver,  # make sure you define this
+    parent_message__isnull=True
+).select_related('sender', 'receiver').prefetch_related('replies')
