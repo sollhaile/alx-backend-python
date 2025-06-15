@@ -25,3 +25,9 @@ def inbox(request):
     # Use the custom manager's method, then chain .only() here explicitly:
     unread_messages = Message.unread.unread_for_user(user).only('id', 'sender', 'content', 'read', 'created_at')
     return render(request, 'inbox.html', {'unread_messages': unread_messages})
+from django.views.decorators.cache import cache_page
+
+@cache_page(60)  # cache timeout of 60 seconds
+def your_messages_view(request, conversation_id):
+    # existing code to retrieve and render messages
+    ...
