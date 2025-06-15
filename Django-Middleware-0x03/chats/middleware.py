@@ -1,16 +1,13 @@
 import datetime
 from django.http import HttpResponseForbidden
 
-class RolePermissionMiddleware:
+class RolepermissionMiddleware:  # 👈 lowercase "p" as required
     def __init__(self, get_response):
         self.get_response = get_response
 
     def __call__(self, request):
-        # Only check for authenticated users
         if request.user.is_authenticated:
-            # Assuming the User model has a 'role' attribute
             user_role = getattr(request.user, 'role', None)
-
             if user_role not in ['admin', 'moderator']:
                 return HttpResponseForbidden("Access denied: You do not have permission.")
         else:
