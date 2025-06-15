@@ -56,10 +56,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'chats.middleware.RequestLoggingMiddleware',
     'chats.middleware.ResponseTimingMiddleware',
-    'chats.middleware.ResponseTimingMiddleware',
-
-    'chats.middleware.UserActivityMiddleware',
-    'chats.middleware.CustomHeaderMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
