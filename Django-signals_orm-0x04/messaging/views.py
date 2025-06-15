@@ -20,3 +20,7 @@ messages = Message.objects.filter(
     receiver=some_receiver,  # make sure you define this
     parent_message__isnull=True
 ).select_related('sender', 'receiver').prefetch_related('replies')
+def inbox(request):
+    user = request.user
+    unread_messages = Message.unread.unread_for_user(user)
+    return render(request, 'inbox.html', {'unread_messages': unread_messages})
