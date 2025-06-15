@@ -59,6 +59,8 @@ MIDDLEWARE = [
     'chats.middleware.ResponseTimingMiddleware',
     'chats.middleware.RestrictAccessByTimeMiddleware',
     'chats.middleware.OffensiveLanguageMiddleware',
+    'chats.middleware.RolePermissionMiddleware',
+
     'chats.middleware.UserActivityMiddleware',
     'chats.middleware.CustomHeaderMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -95,6 +97,7 @@ DATABASES = {
     }
 }
 
+AUTH_USER_MODEL = 'accounts.CustomUser'
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
