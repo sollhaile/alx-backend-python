@@ -14,8 +14,6 @@ class RequestLogMiddleware(MiddlewareMixin):
             f"TIME: {total_time:.4f} seconds\n"
         )
 
-        log_path = "C:/Users/Y.S/Documents/alx-backend-python/Django-Middleware-0x03/requests.log"
-        with open(log_path, "a") as f:
-            f.write(log_line)
-
+        with open('requests.log', 'a') as log_file:
+            log_file.write(log_line)
         return response
