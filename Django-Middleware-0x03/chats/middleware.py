@@ -1,4 +1,6 @@
 import datetime
+from django.http import HttpResponseForbidden
+
 
 class RequestLoggingMiddleware:
     def __init__(self, get_response):
@@ -77,8 +79,6 @@ class OffensiveLanguageMiddleware:
         else:
             ip = request.META.get('REMOTE_ADDR')
         return ip
-from django.http import HttpResponseForbidden
-
 class RolePermissionMiddleware:
     def __init__(self, get_response):
         self.get_response = get_response
