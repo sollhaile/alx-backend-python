@@ -1,23 +1,21 @@
-import datetime
+import time
+from django.utils.deprecation import MiddlewareMixin
 
-class RequestLoggingMiddleware:
-    def __init__(self, get_response):
-        self.get_response = get_response
+class RequestLogMiddleware(MiddlewareMixin):
+    def process_request(self, request):
+        request.start_time = time.time()
 
-    def __call__(self, request):
-        # Gather info
-        method = request.method
-        path = request.get_full_path()
-        timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        ip = request.META.get('REMOTE_ADDR', '')
-        user_agent = request.META.get('HTTP_USER_AGENT', '')
+    def process_response(self, request, response):
+        total_time = time.time() - getattr(request, 'start_time', time.time())
+        log_line = (
+            f"METHOD: {request.method} | "
+            f"PATH: {request.get_full_path()} | "
+            f"STATUS: {response.status_code} | "
+            f"TIME: {total_time:.4f} seconds\n"
+        )
 
-        # Format log line
-        log_entry = f"[{timestamp}] {ip} {method} {path} {user_agent}\n"
+        log_path = "C:/Users/Y.S/Documents/alx-backend-python/Django-Middleware-0x03/requests.log"
+        with open(log_path, "a") as f:
+            f.write(log_line)
 
-        # Write to file
-        with open('requests.log', 'a') as log_file:
-            log_file.write(log_entry)
-
-        # Continue with the response
-        return self.get_response(request)
+        return response
