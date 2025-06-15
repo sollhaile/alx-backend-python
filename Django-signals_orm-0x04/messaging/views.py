@@ -22,5 +22,6 @@ messages = Message.objects.filter(
 ).select_related('sender', 'receiver').prefetch_related('replies')
 def inbox(request):
     user = request.user
-    unread_messages = Message.unread.unread_for_user(user)
+    # Use the custom manager's method, then chain .only() here explicitly:
+    unread_messages = Message.unread.unread_for_user(user).only('id', 'sender', 'content', 'read', 'created_at')
     return render(request, 'inbox.html', {'unread_messages': unread_messages})
