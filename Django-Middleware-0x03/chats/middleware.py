@@ -5,7 +5,19 @@ class RequestLoggingMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
-        log_line = f"{datetime.datetime.now()} - {request.method} {request.path}\n"
+        # Gather info
+        method = request.method
+        path = request.get_full_path()
+        timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        ip = request.META.get('REMOTE_ADDR', '')
+        user_agent = request.META.get('HTTP_USER_AGENT', '')
+
+        # Format log line
         log_path = "C:/Users/Y.S/Documents/alx-backend-python/Django-Middleware-0x03/requests.log"
-        with open(log_path, "a") as f:
-            f.write(log_line)
+        
+        # Write to file
+        with open('requests.log', 'a') as log_file:
+            log_file.write(log_path)
+
+        # Continue with the response
+        return self.get_response(request)
