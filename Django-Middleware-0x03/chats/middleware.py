@@ -1,23 +1,23 @@
-# your_app/middleware.py
-import logging
-from datetime import datetime
-
-# Configure logging
-logger = logging.getLogger(__name__)
-handler = logging.FileHandler('user_requests.log')  # Log file will be created in your root directory
-formatter = logging.Formatter('%(message)s')
-handler.setFormatter(formatter)
-logger.addHandler(handler)
-logger.setLevel(logging.INFO)
+import datetime
 
 class RequestLoggingMiddleware:
     def __init__(self, get_response):
         self.get_response = get_response
 
     def __call__(self, request):
-        user = request.user if request.user.is_authenticated else "Anonymous"
-        log_message = f"{datetime.now()} - User: {user} - Path: {request.path}"
-        logger.info(log_message)
+        # Gather info
+        method = request.method
+        path = request.get_full_path()
+        timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        ip = request.META.get('REMOTE_ADDR', '')
+        user_agent = request.META.get('HTTP_USER_AGENT', '')
 
-        response = self.get_response(request)
-        return response
+        # Format log line
+        log_entry = f"[{timestamp}] {ip} {method} {path} {user_agent}\n"
+
+        # Write to file
+        with open('requests.log', 'a') as log_file:
+            log_file.write(log_entry)
+
+        # Continue with the response
+        return self.get_response(request)
