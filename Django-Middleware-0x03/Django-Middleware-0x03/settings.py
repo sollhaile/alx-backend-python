@@ -58,7 +58,7 @@ MIDDLEWARE = [
     'chats.middleware.ResponseTimingMiddleware',
     'chats.middleware.ResponseTimingMiddleware',
     'chats.middleware.RestrictAccessByTimeMiddleware',
-
+    'chats.middleware.OffensiveLanguageMiddleware',
     'chats.middleware.UserActivityMiddleware',
     'chats.middleware.CustomHeaderMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
