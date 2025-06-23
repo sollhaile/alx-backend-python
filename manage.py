@@ -6,7 +6,11 @@ import sys
 
 def main():
     """Run administrative tasks."""
+<<<<<<< HEAD
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Django-Middleware-0x03.settings')
+=======
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'messaging_app.settings')
+>>>>>>> 471d053 (messaging_app Dockerfile)
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:
