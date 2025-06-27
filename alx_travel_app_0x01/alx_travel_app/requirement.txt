@@ -1,0 +1,14 @@
+{
+  "configurations": [
+    {
+      "type": "debugpy",
+      "request": "launch",
+      "name": "Django: Run manage.py",
+      "program": "${workspaceFolder}/alx_travel_app/manage.py",
+      "args": [
+        "runserver"
+      ],
+      "django": true
+    }
+  ]
+}

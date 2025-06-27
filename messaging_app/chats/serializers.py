@@ -1,20 +1,4 @@
 from rest_framework import serializers
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-from .models import Chat, Message
-
-class ChatSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Chat
-        fields = '__all__'
-
-class MessageSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Message
-        fields = '__all__'
-=======
->>>>>>> 693a14b50ad20d90e157c6d77f006ca46103a5a0
 from .models import User, Conversation, Message
 
 class UserSerializer(serializers.ModelSerializer):
@@ -45,7 +29,3 @@ class ConversationSerializer(serializers.ModelSerializer):
         if not data.get('participants'):
             raise serializers.ValidationError("At least one participant required")
         return data
-<<<<<<< HEAD
-=======
->>>>>>> 471d053 (messaging_app Dockerfile)
->>>>>>> 693a14b50ad20d90e157c6d77f006ca46103a5a0
