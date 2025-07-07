@@ -305,3 +305,62 @@ class BookingViewSet(viewsets.ModelViewSet):
         
         serializer = self.get_serializer(booking)
         return Response(serializer.data)
+import uuid
+import requests
+from django.conf import settings
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from .models import Payment
+
+class InitiatePaymentView(APIView):
+    def post(self, request):
+        tx_ref = str(uuid.uuid4())
+        payload = {
+            "amount": request.data.get("amount"),
+            "currency": "ETB",
+            "email": request.data.get("email"),
+            "first_name": request.data.get("full_name").split()[0],
+            "last_name": request.data.get("full_name").split()[-1],
+            "tx_ref": tx_ref,
+            "callback_url": "http://localhost:8000/api/verify-payment/",
+            "return_url": "http://localhost:8000/payment-success/",
+            "customization[title]": "Travel Booking Payment"
+        }
+
+        headers = {
+            "Authorization": f"Bearer {settings.CHAPA_SECRET_KEY}"
+        }
+
+        chapa_url = "https://api.chapa.co/v1/transaction/initialize"
+        response = requests.post(chapa_url, json=payload, headers=headers)
+
+        if response.status_code == 200:
+            data = response.json()["data"]
+            Payment.objects.create(
+                full_name=request.data.get("full_name"),
+                email=request.data.get("email"),
+                amount=request.data.get("amount"),
+                tx_ref=tx_ref,
+                status="Pending"
+            )
+            return Response({"checkout_url": data["checkout_url"]})
+        else:
+            return Response({"error": "Payment initiation failed"}, status=status.HTTP_400_BAD_REQUEST)
+
+class VerifyPaymentView(APIView):
+    def get(self, request):
+        tx_ref = request.query_params.get("tx_ref")
+        url = f"https://api.chapa.co/v1/transaction/verify/{tx_ref}"
+        headers = {
+            "Authorization": f"Bearer {settings.CHAPA_SECRET_KEY}"
+        }
+
+        response = requests.get(url, headers=headers)
+        if response.status_code == 200:
+            data = response.json()["data"]
+            payment = Payment.objects.get(tx_ref=tx_ref)
+            payment.status = data["status"].capitalize()
+            payment.save()
+            return Response({"message": "Payment verified", "status": payment.status})
+        return Response({"error": "Verification failed"}, status=status.HTTP_400_BAD_REQUEST)
