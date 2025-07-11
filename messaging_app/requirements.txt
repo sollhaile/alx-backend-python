@@ -1,1 +1,8 @@
+Django>=4.0,<5.0
+djangorestframework>=3.14,<4.0
 
+
+Django>=4.0,<5.0
+djangorestframework>=3.14,<4.0
+psycopg2-binary>=2.9    # if using PostgreSQL
+gunicorn>=20.0          # if using Gunicorn as WSGI server
