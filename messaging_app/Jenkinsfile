@@ -1,0 +1,29 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git credentialsId: 'github-credentials', url: 'https://github.com/yourusername/alx-backend-python.git', branch: 'main'
+            }
+        }
+
+        stage('Install dependencies') {
+            steps {
+                sh 'pip install -r messaging_app/requirements.txt'
+            }
+        }
+
+        stage('Run tests') {
+            steps {
+                sh 'pytest messaging_app --junitxml=report.xml'
+            }
+            post {
+                always {
+                    junit 'report.xml'
+                }
+            }
+        }
+    }
+}
+
