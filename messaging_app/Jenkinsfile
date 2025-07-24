@@ -20,7 +20,7 @@ pipeline {
             }
             post {
                 always {
-                    junit 'report.xml'
+                    junit 'messaging_app/report.xml'
                 }
             }
         }
